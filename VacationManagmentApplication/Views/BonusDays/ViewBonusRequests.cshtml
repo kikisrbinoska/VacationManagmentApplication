@@ -1,15 +1,10 @@
 ﻿@model IEnumerable<VacationManagmentApplication.Models.BonusDays>
-
 @{
     ViewData["Title"] = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1 style="color: #4B164C;">Index</h1>
-
-<p>
-    <a asp-action="Create" class="btn btn-primary" style="background-color: #4B164C; border-color: #4B164C;">Create New</a>
-</p>
 
 <table class="table">
     <thead style="background-color: #F8E7F6;">
@@ -19,6 +14,9 @@
             </th>
             <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th style="color: #4B164C;">
+                @Html.DisplayNameFor(model => model.Employee)
             </th>
             <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.HR)
@@ -37,9 +35,11 @@
                     @Html.DisplayFor(modelItem => item.EndDate)
                 </td>
                 <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.Employee.Name)
+                </td>
+                <td style="color: #4B164C;">
                     @Html.DisplayFor(modelItem => item.HR.Name)
                 </td>
-               
             </tr>
         }
     </tbody>
@@ -55,25 +55,4 @@
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(75, 22, 76, 0.3);
     }
-
-    .btn-link {
-        background: none;
-        border: none;
-        color: #4B164C;
-        text-decoration: underline;
-    }
-
-        .btn-link:hover {
-            color: #DD88CF;
-        }
-
-    .btn-primary {
-        background-color: #4B164C;
-        border-color: #4B164C;
-    }
-
-        .btn-primary:hover {
-            background-color: #DD88CF;
-            border-color: #DD88CF;
-        }
 </style>

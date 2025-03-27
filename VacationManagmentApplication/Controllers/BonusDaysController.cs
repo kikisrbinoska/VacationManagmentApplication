@@ -25,6 +25,12 @@ namespace VacationManagmentApplication.Controllers
             var applicationDbContext = _context.BonusDays.Include(b => b.Employee).Include(b => b.HR);
             return View(await applicationDbContext.ToListAsync());
         }
+        public async Task<IActionResult> ViewBonusRequests()
+        {
+            var applicationDbContext = _context.BonusDays.Include(b => b.Employee).Include(b => b.HR);
+            return View(await applicationDbContext.ToListAsync());
+        }
+       
 
         // GET: BonusDays/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -45,6 +51,7 @@ namespace VacationManagmentApplication.Controllers
 
             return View(bonusDays);
         }
+
 
         // GET: BonusDays/Create
         public IActionResult Create()
@@ -72,6 +79,133 @@ namespace VacationManagmentApplication.Controllers
             ViewData["HRId"] = new SelectList(_context.HR, "Id", "Id", bonusDays.HRId);
             return View(bonusDays);
         }
+        // GET: BonusDays/AddNew
+        public IActionResult AddNew(Guid employeeId)
+        {
+            ViewBag.EmployeeId = employeeId;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNew([Bind("Id,StartDate,EndDate,EmployeeId,HRId")] BonusDays bonusDays)
+        {
+            if (bonusDays == null)
+            {
+                ModelState.AddModelError("", "Invalid data submitted.");
+                return View(bonusDays);
+            }
+
+            if (bonusDays.StartDate > bonusDays.EndDate)
+            {
+                ModelState.AddModelError("", "The start date cannot be after the end date.");
+                return View(bonusDays);
+            }
+
+            int requestedDays = (bonusDays.EndDate - bonusDays.StartDate).Days + 1;
+
+            if (bonusDays.StartDate.Year != DateTime.Now.Year || bonusDays.EndDate.Year != DateTime.Now.Year)
+            {
+                ModelState.AddModelError("", "Bonus days must be used within the current year.");
+                return View(bonusDays);
+            }
+
+            if (bonusDays.EndDate > new DateTime(DateTime.Now.Year, 12, 31))
+            {
+                ModelState.AddModelError("", "Bonus days cannot be taken after December 31st.");
+                return View(bonusDays);
+            }
+
+            
+            var employee = await _context.Employees.FindAsync(bonusDays.EmployeeId);
+            if (employee == null)
+            {
+                ModelState.AddModelError("", "Employee not found.");
+                return View(bonusDays);
+            }
+
+            if (requestedDays > employee.GetRemainingBonusDays())
+            {
+                ModelState.AddModelError("", "You do not have enough bonus days for this request.");
+                return View(bonusDays);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(bonusDays);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("ViewBonusRequests");
+            }
+
+            ViewBag.EmployeeId = bonusDays.EmployeeId;
+            ViewBag.HRId = bonusDays.HRId;
+            return View(bonusDays);
+        }
+        public IActionResult AddNewBonus(Guid HRId)
+        {
+            ViewBag.HRId = HRId;
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNewBonus([Bind("Id,StartDate,EndDate,EmployeeId,HRId")] BonusDays bonusDays)
+        {
+            if (bonusDays == null)
+            {
+                ModelState.AddModelError("", "Invalid data submitted.");
+                return View(bonusDays);
+            }
+
+            if (bonusDays.StartDate > bonusDays.EndDate)
+            {
+                ModelState.AddModelError("", "The start date cannot be after the end date.");
+                return View(bonusDays);
+            }
+
+            int requestedDays = (bonusDays.EndDate - bonusDays.StartDate).Days + 1;
+
+            if (bonusDays.StartDate.Year != DateTime.Now.Year || bonusDays.EndDate.Year != DateTime.Now.Year)
+            {
+                ModelState.AddModelError("", "Bonus days must be used within the current year.");
+                return View(bonusDays);
+            }
+
+            if (bonusDays.EndDate > new DateTime(DateTime.Now.Year, 12, 31))
+            {
+                ModelState.AddModelError("", "Bonus days cannot be taken after December 31st.");
+                return View(bonusDays);
+            }
+
+
+            var hr = await _context.HR.FindAsync(bonusDays.HRId);
+            if (hr == null)
+            {
+                ModelState.AddModelError("", "HR not found.");
+                return View(bonusDays);
+            }
+
+            if (requestedDays > hr.GetRemainingBonusDays())
+            {
+                ModelState.AddModelError("", "You do not have enough bonus days for this request.");
+                return View(bonusDays);
+            }
+
+            if (ModelState.IsValid)
+            {
+                _context.Add(bonusDays);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.EmployeeId = bonusDays.EmployeeId;
+            ViewBag.HRId = bonusDays.HRId;
+            return View(bonusDays);
+        }
+
+
 
         // GET: BonusDays/Edit/5
         public async Task<IActionResult> Edit(Guid? id)

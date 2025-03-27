@@ -1,0 +1,112 @@
+﻿@model VacationManagmentApplication.Models.YearlyVacation
+
+@{
+    ViewData["Title"] = "AddNew";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="centered-form">
+    <div class="form-card">
+        <h4>Add new yearly vacation</h4>
+        <hr />
+        <form asp-action="AddNew">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="EmployeeId" value="@ViewBag.EmployeeId" />
+            <input type="hidden" asp-for="HRId" value="@ViewBag.HRId" />
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+<style>
+
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px; 
+    }
+
+  
+    .form-card {
+        width: 100%;
+        max-width: 500px; 
+        padding: 25px;
+        border-radius: 12px;
+        border: 2px solid #DD88CF;
+        box-shadow: 0 4px 10px rgba(75, 22, 76, 0.3); 
+        background-color: white;
+    }
+
+    
+        .form-card h4 {
+            text-align: center;
+            color: #4B164C; 
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+    
+    label {
+        font-weight: bold;
+        color: #4B164C; 
+    }
+
+    
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #DD88CF; 
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+   
+    .btn-primary {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.2rem;
+        background-color: #4B164C; 
+        border-color: #4B164C;
+        color: white;
+        transition: background 0.3s;
+    }
+
+        .btn-primary:hover {
+            background-color: #DD88CF;
+            border-color: #DD88CF;
+            color: white;
+        }
+
+  
+    a {
+        display: block;
+        text-align: center;
+        margin-top: 15px;
+        color: #4B164C; 
+        font-weight: bold;
+    }
+
+        a:hover {
+            text-decoration: underline;
+            color: #DD88CF; 
+        }
+</style>

@@ -25,6 +25,11 @@ namespace VacationManagmentApplication.Controllers
             var applicationDbContext = _context.MedicalCares.Include(m => m.Employee).Include(m => m.HR);
             return View(await applicationDbContext.ToListAsync());
         }
+        public async Task<IActionResult> RequestMedicalCare()
+        {
+            var applicationDbContext = _context.MedicalCares.Include(m => m.Employee).Include(m => m.HR);
+            return View(await applicationDbContext.ToListAsync());
+        }
 
         // GET: MedicalCares/Details/5
         public async Task<IActionResult> Details(Guid? id)
@@ -72,7 +77,164 @@ namespace VacationManagmentApplication.Controllers
             ViewData["HRId"] = new SelectList(_context.HR, "Id", "Id", medicalCare.HRId);
             return View(medicalCare);
         }
+        // GET: MedicalCares/AddNew
+        public IActionResult AddNew(Guid employeeId)
+        {
+            ViewBag.EmployeeId = employeeId;
+            return View();
+        }
 
+
+        // POST: MedicalCares/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNew([Bind("Id,StartDate,EndDate,Reason,EmployeeId,HRId")] MedicalCare medicalCare, IFormFile invoiceFile)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (medicalCare.StartDate > medicalCare.EndDate)
+                {
+                    ModelState.AddModelError("", "The start date cannot be after the end date.");
+                    return View(medicalCare);
+                }
+
+
+                int requestedDays = (medicalCare.EndDate - medicalCare.StartDate).Days + 1;
+
+                if (requestedDays < 1)
+                {
+                    ModelState.AddModelError("", "The date range must be at least one day.");
+                    return View(medicalCare);
+                }
+
+
+                if (medicalCare.StartDate.Year != DateTime.Now.Year || medicalCare.EndDate.Year != DateTime.Now.Year)
+                {
+                    ModelState.AddModelError("", "Medical care days must be used in the current year.");
+                    return View(medicalCare);
+                }
+
+
+                if (medicalCare.EndDate > new DateTime(DateTime.Now.Year, 12, 31))
+                {
+                    ModelState.AddModelError("", "Medical care cannot be taken after 31.12.");
+                    return View(medicalCare);
+                }
+
+                if (invoiceFile != null && invoiceFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
+                    var fileExtension = Path.GetExtension(invoiceFile.FileName).ToLower();
+
+                    if (!allowedExtensions.Contains(fileExtension))
+                    {
+                        ModelState.AddModelError("", "Invalid file type. Only PDF, JPG, and PNG are allowed.");
+                        return View(medicalCare);
+                    }
+
+                    var fileName = Path.GetFileName(invoiceFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await invoiceFile.CopyToAsync(stream);
+                    }
+
+                    medicalCare.InvoicePath = fileName;
+                }
+
+                _context.Add(medicalCare);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(RequestMedicalCare));
+            }
+
+            ViewBag.EmployeeId = medicalCare.EmployeeId;
+            ViewBag.HRId = medicalCare.HRId;
+            return View(medicalCare);
+        }
+        // GET: MedicalCares/AddNew
+        public IActionResult AddNewMedicalCare(Guid HRId)
+        {
+            ViewBag.HRId = HRId;
+            return View();
+        }
+
+
+        // POST: MedicalCares/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNewMedicalCare([Bind("Id,StartDate,EndDate,Reason,EmployeeId,HRId")] MedicalCare medicalCare, IFormFile invoiceFile)
+        {
+            if (ModelState.IsValid)
+            {
+
+                if (medicalCare.StartDate > medicalCare.EndDate)
+                {
+                    ModelState.AddModelError("", "The start date cannot be after the end date.");
+                    return View(medicalCare);
+                }
+
+
+                int requestedDays = (medicalCare.EndDate - medicalCare.StartDate).Days + 1;
+
+                if (requestedDays < 1)
+                {
+                    ModelState.AddModelError("", "The date range must be at least one day.");
+                    return View(medicalCare);
+                }
+
+
+                if (medicalCare.StartDate.Year != DateTime.Now.Year || medicalCare.EndDate.Year != DateTime.Now.Year)
+                {
+                    ModelState.AddModelError("", "Medical care days must be used in the current year.");
+                    return View(medicalCare);
+                }
+
+
+                if (medicalCare.EndDate > new DateTime(DateTime.Now.Year, 12, 31))
+                {
+                    ModelState.AddModelError("", "Medical care cannot be taken after 31.12.");
+                    return View(medicalCare);
+                }
+
+                if (invoiceFile != null && invoiceFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".pdf", ".jpg", ".jpeg", ".png" };
+                    var fileExtension = Path.GetExtension(invoiceFile.FileName).ToLower();
+
+                    if (!allowedExtensions.Contains(fileExtension))
+                    {
+                        ModelState.AddModelError("", "Invalid file type. Only PDF, JPG, and PNG are allowed.");
+                        return View(medicalCare);
+                    }
+
+                    var fileName = Path.GetFileName(invoiceFile.FileName);
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads", fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await invoiceFile.CopyToAsync(stream);
+                    }
+
+                    medicalCare.InvoicePath = fileName;
+                }
+
+                _context.Add(medicalCare);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewBag.EmployeeId = medicalCare.EmployeeId;
+            ViewBag.HRId = medicalCare.HRId;
+            return View(medicalCare);
+        }
         // GET: MedicalCares/Edit/5
         public async Task<IActionResult> Edit(Guid? id)
         {

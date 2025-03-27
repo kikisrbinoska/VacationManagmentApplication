@@ -25,6 +25,74 @@ namespace VacationManagmentApplication.Controllers
             var applicationDbContext = _context.YearlyVacations.Include(y => y.Employee).Include(y => y.HR);
             return View(await applicationDbContext.ToListAsync());
         }
+        public async Task<IActionResult> RequestYearlyVacation()
+        {
+            var applicationDbContext = _context.YearlyVacations.Include(y => y.Employee).Include(y => y.HR);
+            return View(await applicationDbContext.ToListAsync());
+        }
+
+        public IActionResult AddNew(Guid employeeId)
+        {
+            ViewBag.EmployeeId = employeeId;
+            ViewData["HRId"] = new SelectList(_context.HR, "Id", "Id");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNew([Bind("Id,StartDate,EndDate,EmployeeId,HRId")] YearlyVacation yearlyVacation)
+        {
+            if (!ModelState.IsValid)
+                return View(yearlyVacation);
+
+            if (yearlyVacation.StartDate > yearlyVacation.EndDate)
+            {
+                ModelState.AddModelError("", "The start date cannot be after the end date.");
+                return View(yearlyVacation);
+            }
+
+            int requestedDays = (yearlyVacation.EndDate - yearlyVacation.StartDate).Days + 1;
+            if (requestedDays < 1)
+            {
+                ModelState.AddModelError("", "The date range must be at least one day.");
+                return View(yearlyVacation);
+            }
+
+            _context.Add(yearlyVacation);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(RequestYearlyVacation));
+        }
+        public IActionResult AddNewVacation(Guid HRId)
+        {
+            ViewBag.HRId = HRId;
+           
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddNewVacation([Bind("Id,StartDate,EndDate,EmployeeId,HRId")] YearlyVacation yearlyVacation)
+        {
+            if (!ModelState.IsValid)
+                return View(yearlyVacation);
+
+            if (yearlyVacation.StartDate > yearlyVacation.EndDate)
+            {
+                ModelState.AddModelError("", "The start date cannot be after the end date.");
+                return View(yearlyVacation);
+            }
+
+            int requestedDays = (yearlyVacation.EndDate - yearlyVacation.StartDate).Days + 1;
+            if (requestedDays < 1)
+            {
+                ModelState.AddModelError("", "The date range must be at least one day.");
+                return View(yearlyVacation);
+            }
+
+            _context.Add(yearlyVacation);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
         // GET: YearlyVacations/Details/5
         public async Task<IActionResult> Details(Guid? id)

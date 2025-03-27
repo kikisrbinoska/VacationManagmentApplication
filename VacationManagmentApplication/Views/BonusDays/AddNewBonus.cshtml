@@ -1,0 +1,95 @@
+﻿@model VacationManagmentApplication.Models.BonusDays
+@{
+    ViewData["Title"] = "Add New Bonus Days";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="centered-form">
+    <div class="form-card">
+        <h4>Add New Bonus Days</h4>
+        <hr />
+        <form asp-action="AddNewBonus">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label"></label>
+                <input asp-for="StartDate" class="form-control" type="date" required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label"></label>
+                <input asp-for="EndDate" class="form-control" type="date" required />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="EmployeeId" value="@ViewBag.EmployeeId" />
+            <input type="hidden" asp-for="HRId" value="@ViewBag.HRId" />
+            <div class="form-group">
+                <input type="submit" value="Add New" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: -150px;
+    }
+
+    .form-card {
+        width: 100%;
+        max-width: 600px;
+        margin: 20px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        box-shadow: 0 4px 8px rgba(75, 22, 76, 0.3);
+        padding: 20px;
+        background-color: #F8E7F6;
+    }
+
+        .form-card h4 {
+            text-align: center;
+            color: #4B164C;
+            font-weight: bold;
+        }
+
+    label {
+        font-weight: bold;
+        color: #333;
+    }
+
+    .form-control {
+        border-radius: 5px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 1.2rem;
+        background-color: #DD88CF;
+        border-color: #DD88CF;
+    }
+
+        .btn-primary:hover {
+            background-color: #B766A6;
+            border-color: #B766A6;
+        }
+
+    a {
+        display: inline-block;
+        margin-top: 20px;
+        color: #DD88CF;
+    }
+
+        a:hover {
+            text-decoration: underline;
+        }
+</style>

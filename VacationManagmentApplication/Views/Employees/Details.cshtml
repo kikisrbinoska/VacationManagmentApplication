@@ -1,44 +1,113 @@
 ﻿@model VacationManagmentApplication.Models.Employee
-
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Details</h1>
+<h1 style="color: #4B164C;">Employee details</h1>
 
-<div>
-    <h4>Employee</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Surname)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Surname)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Age)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Age)
-        </dd>
-    </dl>
+<div class="card" style="border-color: #4B164C;">
+    <h4 class="card-header" style="background-color: #4B164C; color: white;">Employee</h4>
+    <div class="card-body" style="background-color: #F8E7F6;">
+        <dl class="row">
+            <dt class="col-sm-3" style="color: #4B164C;">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-9" style="color: #4B164C;">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-3" style="color: #4B164C;">
+                @Html.DisplayNameFor(model => model.Surname)
+            </dt>
+            <dd class="col-sm-9" style="color: #4B164C;">
+                @Html.DisplayFor(model => model.Surname)
+            </dd>
+            <dt class="col-sm-3" style="color: #4B164C;">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
+            <dd class="col-sm-9" style="color: #4B164C;">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+            <dt class="col-sm-3" style="color: #4B164C;">
+                @Html.DisplayNameFor(model => model.Age)
+            </dt>
+            <dd class="col-sm-9" style="color: #4B164C;">
+                @Html.DisplayFor(model => model.Age)
+            </dd>
+        </dl>
+    </div>
 </div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="mt-4">
+    <h4 style="color: #4B164C;">Information about free days</h4>
+    <div class="alert" style="background-color: #F8E7F6; border-color: #DD88CF; color: #4B164C;">
+        <strong style="color: #DD88CF;">First Part:</strong> @Model.GetRemainingFirstPartVacation() days<br />
+        <strong style="color: #DD88CF;">Second Part:</strong> @Model.GetRemainingSecondPartVacation() days<br />
+        <strong style="color: #DD88CF;">Bonus Days :</strong> @Model.GetRemainingBonusDays() days<br />
+        <strong style="color: #DD88CF;">Total Days:</strong> @Model.GetTotalRemainingVacationDays() days
+    </div>
 </div>
+
+<div class="mt-4">
+   
+    <div class="btn-group">
+        <a class="btn btn-primary" asp-action="AddNew" asp-controller="YearlyVacations" asp-route-employeeId="@Model.Id" style="background-color: #4B164C; border-color: #4B164C;">Add yearly vacation</a>
+        <a class="btn btn-info" asp-action="AddNew" asp-controller="MedicalCares" asp-route-employeeId="@Model.Id" style="background-color: #DD88CF; border-color: #DD88CF;">Add medical care</a>
+        <a class="btn btn-success" asp-action="AddNew" asp-controller="BonusDays" asp-route-employeeId="@Model.Id" style="background-color: #F8E7F6; border-color: #F8E7F6; color: #4B164C;">Add bonus days</a>
+    </div>
+</div>
+
+<style>
+    .card {
+        margin-bottom: 20px;
+        border-radius: 8px;
+        border: 1px solid #4B164C;
+    }
+
+    .card-header {
+        background-color: #4B164C;
+        color: white;
+        font-weight: bold;
+    }
+
+    .dl-horizontal dt {
+        font-weight: bold;
+        color: #4B164C;
+    }
+
+    .alert {
+        font-size: 1.2rem;
+        padding: 20px;
+        background-color: #F8E7F6;
+        border-color: #DD88CF;
+        color: #4B164C;
+        font-weight: bold;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+
+    .btn-group .btn {
+        margin-right: 10px;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary:hover, .btn-info:hover, .btn-success:hover {
+        background-color: #DD88CF;
+        border-color: #DD88CF;
+        opacity: 0.9;
+    }
+
+    h1, h4 {
+        font-family: 'Arial', sans-serif;
+        font-weight: bold;
+        color: #4B164C;
+    }
+
+    .alert strong {
+        font-weight: bold;
+        color: #DD88CF;
+    }
+
+</style>

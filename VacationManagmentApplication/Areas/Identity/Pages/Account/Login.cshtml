@@ -55,8 +55,10 @@
                 {
                     <div>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">
+                                article
+                                about setting up this ASP.NET application to support logging in via external services
+                            </a>.
                         </p>
                     </div>
                 }
@@ -67,7 +69,7 @@
                             <p>
                                 @foreach (var provider in Model.ExternalLogins!)
                                 {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                    <button type="submit" class="btn btn-primary external-login-btn" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
                                 }
                             </p>
                         </div>
@@ -81,3 +83,27 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    /* Custom Styles */
+    .btn-primary {
+        background-color: #4B164C; /* Main color */
+        border-color: #4B164C;
+    }
+
+        .btn-primary:hover {
+            background-color: #DD88CF; /* Hover color */
+            border-color: #DD88CF;
+        }
+
+    .external-login-btn {
+        background-color: #F8E7F6; /* Light pink color */
+        border-color: #F8E7F6;
+        color: #4B164C; /* Dark purple text color */
+    }
+
+        .external-login-btn:hover {
+            background-color: #DD88CF;
+            border-color: #DD88CF;
+        }
+</style>

@@ -1,0 +1,100 @@
+﻿@model VacationManagmentApplication.Models.BonusDays
+@{
+    ViewData["Title"] = "Add New Bonus Days";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="centered-form">
+    <div class="form-card">
+        <h4>Add New Bonus Days</h4>
+        <hr />
+        <form asp-action="AddNew">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="StartDate" class="control-label">Start Date</label>
+                <input asp-for="StartDate" class="form-control" type="date" required />
+                <span asp-validation-for="StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="EndDate" class="control-label">End Date</label>
+                <input asp-for="EndDate" class="form-control" type="date" required />
+                <span asp-validation-for="EndDate" class="text-danger"></span>
+            </div>
+
+            <input type="hidden" asp-for="EmployeeId" value="@ViewBag.EmployeeId" />
+            <input type="hidden" asp-for="HRId" value="@ViewBag.HRId" />
+
+            <div class="form-group">
+                <input type="submit" value="Add New" class="btn btn-custom" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<style>
+    
+    .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    /* Form card styles */
+    .form-card {
+        width: 100%;
+        max-width: 500px;
+        padding: 25px;
+        border-radius: 12px;
+        border: 2px solid #DD88CF; 
+        box-shadow: 0 4px 10px rgba(75, 22, 76, 0.3);
+        background-color: white;
+    }
+
+       
+        .form-card h4 {
+            text-align: center;
+            color: #4B164C; 
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+   
+    label {
+        font-weight: bold;
+        color: #4B164C; 
+    }
+
+   
+    .form-control {
+        border-radius: 6px;
+        border: 1px solid #DD88CF; 
+        padding: 10px;
+        font-size: 1rem;
+    }
+
+   
+    .btn-custom {
+        width: 100%;
+        padding: 12px;
+        font-size: 1.2rem;
+        background-color: #4B164C;
+        border: none;
+        color: white;
+        transition: background 0.3s;
+    }
+
+        .btn-custom:hover {
+            background-color: #DD88CF; 
+            color: white;
+        }
+</style>

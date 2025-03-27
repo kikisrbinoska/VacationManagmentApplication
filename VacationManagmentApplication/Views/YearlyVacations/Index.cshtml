@@ -5,50 +5,111 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1 style="color: #4B164C;">Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary" style="background-color: #4B164C; border-color: #4B164C;">Create New</a>
 </p>
+
 <table class="table">
-    <thead>
+    <thead style="background-color: #F8E7F6;">
         <tr>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee)
-            </th>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.HR)
             </th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HR.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+    <tbody style="background-color: #F8E7F6;">
+        @foreach (var item in Model)
+        {
+            <tr id="row-@item.Id" style="background-color: #F8E7F6;">
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.HR.Name)
+                </td>
+                <td>
+                    <a href="javascript:void(0);" onclick="approveRow(@item.Id)" class="btn btn-success" style="color: #fff; text-decoration: none;">Approve</a> |
+                    <a href="javascript:void(0);" onclick="rejectRow(@item.Id)" class="btn btn-danger" style="color: #fff; text-decoration: none;">Reject</a> |
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-link" style="color: #4B164C; text-decoration: none;">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-link" style="color: #4B164C; text-decoration: none;">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-link" style="color: #4B164C; text-decoration: none;">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<style>
+    .table th, .table td {
+        color: #4B164C;
+    }
+
+    .table {
+        background-color: #F8E7F6;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(75, 22, 76, 0.3);
+    }
+
+    .btn-link {
+        background: none;
+        border: none;
+        color: #4B164C;
+        text-decoration: underline;
+    }
+
+        .btn-link:hover {
+            color: #DD88CF;
+        }
+
+    .btn-primary {
+        background-color: #4B164C;
+        border-color: #4B164C;
+    }
+
+        .btn-primary:hover {
+            background-color: #DD88CF;
+            border-color: #DD88CF;
+        }
+
+    .approved {
+        background-color: #28a745 !important; 
+        color: white !important;
+    }
+
+    .rejected {
+        background-color: #dc3545 !important;
+        color: white !important;
+    }
+</style>
+
+<script>
+    function approveRow(id) {
+        var row = document.getElementById("row-" + id);
+        var cells = row.getElementsByTagName("td");
+        for (var i = 0; i < cells.length; i++) {
+            cells[i].classList.add("approved");
+            cells[i].classList.remove("rejected");
+        }
+    }
+
+    function rejectRow(id) {
+        var row = document.getElementById("row-" + id);
+        var cells = row.getElementsByTagName("td");
+        for (var i = 0; i < cells.length; i++) {
+            cells[i].classList.add("rejected");
+            cells[i].classList.remove("approved");
+        }
+    }
+</script>

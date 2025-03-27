@@ -157,31 +157,28 @@ namespace VacationManagmentApplication.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
 
-
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
-
+                    // Get the currently logged-in user (the user that was authenticated)
+                    var user = await _userManager.GetUserAsync(User); // This ensures you're getting the correct user from the sign-in context
 
                     var roles = await _userManager.GetRolesAsync(user);
 
-
                     if (roles.Contains("HR"))
                     {
-
                         return RedirectToAction("Details", "HR", new { id = user.Id });
                     }
                     else if (roles.Contains("Employee"))
                     {
-
                         return RedirectToAction("Details", "Employee", new { id = user.Id });
                     }
 
-
                     return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
@@ -193,7 +190,6 @@ namespace VacationManagmentApplication.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
-
 
             return Page();
         }

@@ -149,6 +149,42 @@ namespace VacationManagmentApplication.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        public IActionResult GetRemainingVacationDays(Guid employeeId)
+        {
+            var employee = _context.Employees
+                .Include(e => e.Vacations)
+                .Include(e => e.BonusDays)
+                .FirstOrDefault(e => e.Id == employeeId);
+
+            if (employee == null)
+            {
+                return NotFound("Employee not found");
+            }
+
+            var remainingDays = employee.GetTotalRemainingVacationDays();
+            return Ok(new { remainingDays });
+        }
+
+        
+        public void ResetUnusedDays()
+        {
+            var employees = _context.Employees.Include(e => e.Vacations).Include(e => e.BonusDays).ToList();
+
+            foreach (var employee in employees)
+            {
+                if (DateTime.Now.Month == 7)
+                {
+                    employee.Vacations.RemoveAll(v => v.StartDate.Year < DateTime.Now.Year);
+                }
+
+                if (DateTime.Now.Month == 1)
+                {
+                    employee.BonusDays.Clear();
+                }
+            }
+
+            _context.SaveChanges();
+        }
 
         private bool EmployeeExists(Guid id)
         {

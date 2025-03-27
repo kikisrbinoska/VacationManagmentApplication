@@ -5,62 +5,97 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1 style="color: #4B164C;">Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="color: #4B164C;">Create New</a>
 </p>
-<table class="table">
+
+<table class="table" style="border-color: #4B164C;">
     <thead>
         <tr>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.StartDate)
             </th>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.Reason)
             </th>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.InvoicePath)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee)
-            </th>
-            <th>
+            <th style="color: #4B164C;">
                 @Html.DisplayNameFor(model => model.HR)
             </th>
-            <th></th>
+            <th style="color: #4B164C;"></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Reason)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.InvoicePath)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Employee.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.HR.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.Reason)
+                </td>
+                 <td style="color: #4B164C;">
+                        @if (!string.IsNullOrEmpty(item.InvoicePath))
+                        {
+                                    <a href="~/uploads/@item.InvoicePath" target="_blank" style="color:#DD88CF;">View Invoice</a>
+                        }
+                        else
+                        {
+                                    <span>No invoice uploaded</span>
+                        }
+                        </td>
+                <td style="color: #4B164C;">
+                    @Html.DisplayFor(modelItem => item.HR.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" style="color: #DD88CF;">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" style="color: #DD88CF;">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" style="color: #DD88CF;">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+<style>
+    h1, th {
+        color: #4B164C;
+    }
+
+    .table {
+        border-color: #4B164C;
+    }
+
+    .btn-group .btn {
+        background-color: #DD88CF;
+        border-color: #DD88CF;
+        color: #4B164C;
+        font-size: 1.1rem;
+    }
+
+        .btn-group .btn:hover {
+            background-color: #F8E7F6;
+            border-color: #F8E7F6;
+            color: #4B164C;
+        }
+
+    a {
+        color: #DD88CF;
+    }
+
+        a:hover {
+            color: #F8E7F6;
+        }
+
+</style>
