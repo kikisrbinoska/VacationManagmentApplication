@@ -4,7 +4,7 @@ using VacationManagmentApplication.Models;
 
 namespace VacationManagmentApplication.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<HR> HR { get; set; }
